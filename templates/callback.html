@@ -1,0 +1,42 @@
+<html lang="ja">
+	<head>
+		<title>bindid demo callback</title>
+		<meta name="xm-bind-id-client_id" content="{{client_id}}"> 
+
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=Promise%2CPromise.prototype.finally%2CTextDecoder%2CTextEncoder%2CObject.entries"></script> 
+		<!-- <script src="https://signin.bindid-sandbox.io/bindid-sdk/transmit-bind-id-sdk.js" defer></script> -->
+		<script src="https://signin.bindid-sandbox.io/bindid-sdk/transmit-bind-id-sdk.js"></script>
+
+	</head>
+	<body>
+		<b>Redirecting...</b>
+	 <script>
+		 var url = new URL(window.location.href);
+		 var params = url.searchParams;
+		 console.log( params.get('code' ));
+		 console.log( params.get('state'));
+
+		function sendAuthCodeToServer(authCode) {
+				console.log( "auth success" );
+				window.location.href = window.location.origin + "/auth-success";
+    }
+   function handleError(err) {
+				console.log( "auth error" );
+				window.location.href = window.location.origin + "/auth-failure";
+    }
+
+		// console.log( window.XmBindId === undefined? "undefined": "defined");
+
+		// console.log ( typeof window.XmBindId === 'undefined' );
+		console.log( window );
+		console.log( window.XmBindId );
+		console.log( window.location.href );
+
+
+    window.XmBindId.processRedirectResponse()
+     .then(res => { sendAuthCodeToServer(res.code); },
+        err => { handleError(err); })
+	 </script>
+
+	</body>
+</html>

@@ -1,10 +1,15 @@
+# For web application
 from flask import Flask, request, render_template, abort
 
+# Utilities
 from datetime import datetime
 import configparser
 import json
 import logging
 import logging.config
+
+# For calling external REST API
+import requests, pprint
 
 log_level = {
     'CRITICAL': 50,
@@ -17,6 +22,7 @@ log_level = {
 # Global setting
 g_client_id = ""
 g_redirect_uri = ""
+g_bind_id_host = ""
         
 logger = logging.getLogger('app')
 
@@ -29,13 +35,21 @@ def read_config():
     conf.read_file(f)
   return conf
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def index():
     return render_template('index.html', client_id=g_client_id, redirect_uri=g_redirect_uri)
 
-@app.route("/callback")
-def handle_():
-    return "<p>Hello, World!</p>"
+@app.route("/callback", methods=['GET'])
+def callback():
+    return render_template('callback.html', client_id=g_client_id)
+
+@app.route("/auth-success")
+def auth_success():
+    return render_template('auth_success.html', client_id=g_client_id)
+
+@app.route("/auth-failure")
+def auth_failure():
+    return render_template('auth_failure.html')
 
 if __name__ == '__main__':
     logger.warn('In main...')
@@ -49,8 +63,10 @@ if __name__ == '__main__':
     try: 
         g_client_id = conf['BINDID']['CLIENT_ID']
         g_redirect_uri = conf['BINDID']['REDIRECT_URI']
+        g_bind_id_host = conf['BINDID']['BINDID_HOST']
 
-        app.run(host='0.0.0.0', port=int(conf['APP']['PORT'] ))
+        context = ( conf['APP']['TLS_CERT'], conf['APP']['TLS_PRIVATE_KEY'] )
+        app.run(host='0.0.0.0', port=int(conf['APP']['PORT']), ssl_context=context)
 
     except Exception as e:
         logging.error("There was an error starting the server: {}".format(e))
