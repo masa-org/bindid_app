@@ -18,7 +18,7 @@
 
 		function sendAuthCodeToServer(authCode) {
 				console.log( "auth success" );
-				window.location.href = window.location.origin + "/auth-success";
+				window.location.href = window.location.origin + "/auth-success?code=" + authCode;
     }
    function handleError(err) {
 				console.log( "auth error" );
