@@ -1,6 +1,6 @@
 <html lang="ja">
 	<head>
-		<title>bindid demo auth success</title>
+		<title>bindid demo register new user</title>
 		<meta name="xm-bind-id-client_id" content="{{client_id}}"> 
 
 		<script src="https://polyfill.io/v3/polyfill.min.js?features=Promise%2CPromise.prototype.finally%2CTextDecoder%2CTextEncoder%2CObject.entries"></script> 
@@ -8,21 +8,12 @@
 
 	</head>
 	<body>
-		<b> Authentication success </b>
-		<br>
-		<b>User token</b> <br>
-		<pre>
-{{user_token}}
-		</pre>
-		<br><br>
-		<b>Sign key</b> <br>
-		<pre>
-{{sign_key}}
-		</pre>
-		<br><br>
-		<b>Decoded ID token</b> <br>
-		<pre>
-{{id_token}}
-		</pre>
+		<form action="register_new_user" method="POST">
+			<div>
+				<label for="alias">What alias would you like to be?</label><br>
+				<input type="text" name="alias" id="alias" value="Masa"><br>
+				<input type="submit" value="submit">
+			</div>
+		</form>
 	</body>
 </html>
