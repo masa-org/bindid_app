@@ -3,9 +3,7 @@ from flask import Flask, session, request, render_template, abort
 
 # Utilities
 from datetime import datetime, timedelta
-import configparser
-import json
-import logging
+import json, configparser, logging
 import logging.config
 
 # For calling external REST API
@@ -29,7 +27,8 @@ log_level = {
 g_client_id = ""
 g_client_secret = ""
 g_redirect_uri = ""
-g_bind_id_host = ""
+g_bindid_signin_host = ""
+g_bindid_api_host = ""
         
 logger = logging.getLogger('app')
 
@@ -66,7 +65,7 @@ def auth_success():
     logger.warn( "auth_code: " + auth_code )
 
     # Create POST API payload
-    url = g_bind_id_host + "/token"
+    url = g_bindid_signin_host + "/token"
     header = {"Content-Type": "application/x-www-form-urlencoded"}
     payload = { 
         "grant_type": "authorization_code",
@@ -99,13 +98,13 @@ def auth_success():
     logger.warn( "Access Token:\n" + access_token )
 
     # Retrieve the signing key to validate the ID token 
-    url = g_bind_id_host + "/jwks"
+    url = g_bindid_signin_host + "/jwks"
 
     try:
         r = requests.get( url )
         r.raise_for_status()
     except Exception as e:
-        logging.error("There was an error making POST call: {}".format(e))
+        logging.error("There was an error making GET call: {}".format(e))
 
     sign_key_json = r.json()
     logger.warn( "Sign key:\n" + json.dumps( sign_key_json, indent=2 ))
@@ -134,13 +133,11 @@ def auth_success():
             key=key, 
             algorithms=['RS256'], 
             audience=g_client_id,
-            issuer=g_bind_id_host)
+            issuer=g_bindid_signin_host)
     except Exception as e:
         logging.error("There was an error decoding ID token: {}".format(e))
 
     logger.warn( "ID token decoded:\n" + json.dumps( id_token_decoded ) );
-
-    print( session.keys() )
 
     if "bindid_alias" in id_token_decoded:  
         # User exist
@@ -179,7 +176,7 @@ def register_new_user():
     logger.warn( "Feedback auth value: " + str(feedback_auth_value) )
 
     # Invoke 'session-feedback' API
-    url = g_bind_id_host + "/session-feedback"
+    url = g_bindid_api_host + "/session-feedback"
     headers = { 
         "Content-Type": "application/json",
         "Authorization": "BindIdBackend AccessToken " + session['access_token'] + "; " + feedback_auth_value.decode('utf-8')
@@ -188,7 +185,7 @@ def register_new_user():
     payload = { 
         "subject_session_at": session['access_token'],
         "reports": [{
-            "type": "authentication_perfomed",
+            "type": "authentication_performed",
             "alias": alias,
             "time": int(time.time())
         }]
@@ -199,7 +196,7 @@ def register_new_user():
 
     # Invoke POST API
     try:
-        r = requests.post( url, headers=headers, data=payload)
+        r = requests.post( url, headers=headers, json=payload)
         r.raise_for_status()
     except Exception as e:
         logging.error("There was an error making POST call: {}".format(e))
@@ -220,7 +217,8 @@ if __name__ == '__main__':
         g_client_id     = conf['BINDID']['CLIENT_ID']
         g_client_secret = conf['BINDID']['CLIENT_SECRET']
         g_redirect_uri  = conf['BINDID']['REDIRECT_URI']
-        g_bind_id_host  = conf['BINDID']['BINDID_HOST']
+        g_bindid_signin_host  = conf['BINDID']['BINDID_SIGNIN_HOST']
+        g_bindid_api_host  = conf['BINDID']['BINDID_API_HOST']
 
         context = ( conf['APP']['TLS_CERT'], conf['APP']['TLS_PRIVATE_KEY'] )
         app.run(host='0.0.0.0', port=int(conf['APP']['PORT']), ssl_context=context)
