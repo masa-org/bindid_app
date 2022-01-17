@@ -154,7 +154,7 @@ def auth_failure():
     # Just show error page
     return render_template('auth_failure.html')
 
-@app.route("/register_new_user", methods=['POST'])
+@app.route("/register-new-user", methods=['POST'])
 def register_new_user():
     # Register new user
     if "access_token" in session:
@@ -198,10 +198,33 @@ def register_new_user():
     try:
         r = requests.post( url, headers=headers, json=payload)
         r.raise_for_status()
+        return render_template('register_success.html')
     except Exception as e:
         logging.error("There was an error making POST call: {}".format(e))
+        return render_template('register_error.html')
 
-    return render_template('auth_success.html')
+@app.route("/your-app")
+def your_app():
+    # Your app goes here
+
+    logger.warn( "Access token: " + session['access_token' ] ); 
+
+    # Use user_info api to fetch user data
+    url = g_bindid_signin_host + "/userinfo"
+    headers = {
+        "Authorization":  "Bearer " + session['access_token'] 
+    }
+
+    try:
+        r = requests.get( url, headers=headers )
+        r.raise_for_status()
+    except Exception as e:
+        logging.error("There was an error making GET call: {}".format(e))
+
+    user_info_json = r.json()
+    logger.warn( "User info:\n" + json.dumps( user_info_json, indent=2 ))
+    
+    return render_template('your_app.html', user_info=json.dumps(user_info_json, indent=2))
 
 
 if __name__ == '__main__':
