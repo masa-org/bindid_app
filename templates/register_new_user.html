@@ -1,13 +1,16 @@
 <html lang="ja">
 	<head>
 		<title>bindid demo register new user</title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='bulma.css') }}">
 	</head>
 	<body>
+		<h1 class="title">Register new alias</h1>
+		<br>
 		<form action="register-new-user" method="POST">
 			<div>
-				<label for="alias">What alias would you like to be?</label><br>
-				<input type="text" name="alias" id="alias" value="itmstm+test@itmstm.com"><br>
-				<input type="submit" value="submit">
+				<label class="label" for="alias">What alias would you like to be?</label><br>
+				<input class="input" type="text" name="alias" id="alias" value="itmstm+test@itmstm.com"><br>
+				<input class="button" type="submit" value="submit">
 			</div>
 		</form>
 	</body>

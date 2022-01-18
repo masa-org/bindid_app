@@ -1,14 +1,16 @@
 <html lang="ja">
 	<head>
 		<title>bindid demo register errored</title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='bulma.css') }}">
 	</head>
 	<body>
-		<h1> User registration failed </h1>
+		<h1 class="title"> User registration failed </h1>
 
 		<form action="/" method="GET">
 			<div>
-				<label>Go back to top</label><br>
-				<input type="submit" value="Start over">
+				<label class="label">Go back to top</label>
+				<br>
+				<input class="button" type="submit" value="Start over">
 			</div>
 		</form>
 

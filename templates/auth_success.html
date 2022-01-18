@@ -1,18 +1,19 @@
 <html lang="ja">
 	<head>
 		<title>bindid demo auth success</title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='bulma.css') }}">
 	</head>
 	<body>
-		<h1> Authentication success </h1>
+		<h1 class="title"> Authentication success </h1>
 
 		<form action="your-app" method="GET">
-			<div>
-				<label for="your_app">Please move to your app</label><br>
-				<input type="submit" value="Move to your app">
+			<div >
+				<label class="subtitle" for="your_app">Please move to your app</label><br>
+				<input class="control" type="submit" value="Move to your app">
 			</div>
 		</form>
 
-		<h2>Showing some of important information received during auth process. (Just for debugging purpose)</h2>
+		<h2 class="subtitle" >Showing some of important information received during auth process. (Just for debugging purpose)</h2>
 		<br>
 		<b>User token</b> <br>
 		<pre>

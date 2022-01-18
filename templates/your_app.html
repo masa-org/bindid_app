@@ -1,11 +1,12 @@
 <html lang="ja">
 	<head>
 		<title>bindid demo your application</title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='bulma.css') }}">
 	</head>
 	<body>
-		<h1>Your application goes here.</h1>
+		<h1 class="title">Your application goes here.</h1>
 		<br>
-		<h2>Here's your user info:</h2>
+		<h2 class="subtitle">Here's your user info:</h2>
 		<pre>
 {{ user_info }}
 		</pre>
