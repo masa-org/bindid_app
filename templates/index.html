@@ -1,6 +1,9 @@
 <html lang="ja">
 	<head>
 		<title>bindid demo index page</title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('styles',filename='style.css') }}">
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('styles',filename='fonts.css') }}">
+
 		<meta name="xm-bind-id-client_id" content="{{client_id}}"> 
 		<meta name="xm-bind-id-redirect_uri" content="{{redirect_uri}}"> 
 		<script src="https://polyfill.io/v3/polyfill.min.js?features=Promise%2CPromise.prototype.finally%2CTextDecoder%2CTextEncoder%2CObject.entries"></script>

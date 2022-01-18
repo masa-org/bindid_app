@@ -77,7 +77,7 @@ def auth_success():
 
     payload = urllib.parse.urlencode(payload)
 
-    # Invoke POST API
+    # Invoke Token POST API
     try:
         r = requests.post( url, headers=header, data=payload )
         r.raise_for_status()
